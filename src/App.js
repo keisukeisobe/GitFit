@@ -5,6 +5,7 @@ import Login from './pages/login';
 import Workout from './pages/workout';
 import About from './pages/about';
 import Test from './pages/test';
+import Mrv from './pages/mrv';
 
 //if user is NOT authenticated, take them to /login
 function PrivateRoute({component: Component, authenticated}){
@@ -38,7 +39,6 @@ function App() {
     auth().onAuthStateChanged(user => {
       if (user) {
         setAuthenticated(true);
-        console.log(auth().currentUser.uid);
         setLoading(false);
       } else {
         setAuthenticated(false);
@@ -57,7 +57,8 @@ function App() {
         <Switch>
           <Route exact path="/" component={About} />
           <PrivateRoute path="/workout" authenticated={authenticated} component={Workout} />
-          <PrivateRoute path="/test" authenticated={authenticated} component={Test} />
+          <PrivateRoute path="/test" authenticated={authenticated} component={Test}/>
+          <PrivateRoute path="/mrv" authenticated={authenticated} component={Mrv}/>
           <PublicRoute path="/login" authenticated={authenticated} component={Login} />
         </Switch>
       </Router>

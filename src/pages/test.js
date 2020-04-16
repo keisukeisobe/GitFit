@@ -1,37 +1,63 @@
 import React, {useState, useEffect} from 'react';
-import {db} from '../services/firebase';
+import {auth, db} from '../services/firebase';
+import {useSetInput} from '../helpers/setInput';
 import Question from '../components/question';
 
 function Test() {
   const [readError, setReadError] = useState(null);
-  const [currentQuestionId, setCurrentQuestionId] = useState('1');
-  const [currentQuestionData, setCurrentQuestionData] = useState(null);
+  const [writeError, setWriteError] = useState(null);
+  const [questionArray, setQuestionArray] = useState(null);
+  const [input, setInput] = useSetInput();
+  const [currentUser, setCurrentUser] = useState(auth().currentUser);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setWriteError(null);
+    Object.keys(input).forEach(k => {
+      input[k] = Number(input[k]);
+    });
+    const answerArray = Object.values(input);
+    const baselineMRV = answerArray.reduce( (accumulator, currentValue) => accumulator + currentValue);
+    db.collection('users').doc(currentUser.uid).set(
+      {
+        answers: answerArray,
+        baselineMRV: baselineMRV
+      });
+  }
+
+  //retrieve question data
   useEffect(() => {
-    db.collection('questions').doc(currentQuestionId).get()
+    db.collection('questions').doc('8gVdHO35vFxnwux6zhCT').get()
       .then(doc => {
-        if (!doc.exists){
-          console.log('Error displaying question!');
+        if(!doc.exists){
+          console.log('Document does not exist.');
         } else {
-          //console.log('Question data', doc.data());
-          setCurrentQuestionData(doc.data());
+          setQuestionArray(doc.data().questionArray);
         }
       })
       .catch(err => {
-        setReadError(err);
-        console.log('Error retrieving document', readError);
+        console.log('Error retrieving document', err.message);
+        setReadError(err.message);
       });
-  }, [currentQuestionId, readError]);
+  }, []);
 
-  return (
-    <div>
-      <p>First we will determine a rough estimate on your MRV based on your demographics and training history.</p>
-      <Question
-        currentQuestionId={currentQuestionId}
-        currentQuestionData={currentQuestionData}
-        setCurrentQuestionId={setCurrentQuestionId}
-      />
-    </div>
+  return questionArray === null || questionArray.length !== 11 ? <p>Loading... </p> : (
+    <form onSubmit={handleSubmit}>
+      <fieldset>
+        <legend>Determining your baseline Maximum Recoverable Volume (MRV)</legend>
+          {questionArray.map((question, questionIndex) => {
+            return (
+              <Question 
+                key={questionIndex}
+                question={question}
+                questionIndex={questionIndex}
+                setInput={setInput} 
+              />
+            );
+          })}
+      </fieldset>
+      <input type="submit" value="Submit" />
+    </form>
   );
 }
 
