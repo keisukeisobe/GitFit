@@ -43,24 +43,6 @@ function Mrv(){
       <p>
         See below for a baseline volume table for each muscle group.
       </p>
-      <table>
-        <tr>
-          <th>Muscle Group</th>
-          <th>MV</th>
-          <th>MAV MIN</th>
-          <th>MAV MAV</th>
-          <th>MRV</th>
-        </tr>
-        <tr>
-          <td>Abs</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-
-        </tr>
-      </table>
-
     </div>
   );
 }

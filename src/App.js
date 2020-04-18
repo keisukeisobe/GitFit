@@ -6,6 +6,7 @@ import Workout from './pages/workout';
 import About from './pages/about';
 import Test from './pages/test';
 import Mrv from './pages/mrv';
+import Postvolume from './pages/postvolume';
 
 //if user is NOT authenticated, take them to /login
 function PrivateRoute({component: Component, authenticated}){
@@ -59,6 +60,7 @@ function App() {
           <PrivateRoute path="/workout" authenticated={authenticated} component={Workout} />
           <PrivateRoute path="/test" authenticated={authenticated} component={Test}/>
           <PrivateRoute path="/mrv" authenticated={authenticated} component={Mrv}/>
+          <PrivateRoute path="/postvolume" authenticated={authenticated} component={Postvolume}/>
           <PublicRoute path="/login" authenticated={authenticated} component={Login} />
         </Switch>
       </Router>
