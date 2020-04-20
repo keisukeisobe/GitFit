@@ -3,7 +3,7 @@ import React from 'react';
 function Question(props) {
   return (
     <>
-      {`Q${props.questionIndex}: ${props.question.question}`}
+      {`Q${props.questionIndex+1}: ${props.question.question}`}
       {props.question.options.map((option, optionIndex) => {
         return (
           <ul key={optionIndex}>

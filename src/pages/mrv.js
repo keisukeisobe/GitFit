@@ -34,7 +34,8 @@ const Styles = styled.div`
 
 function Mrv(){
   const [currentUser, setCurrentUser] = useState(auth().currentUser);
-  const [currentModifier, setCurrentModifier] = useState(0);
+  const [currentMRV, setCurrentMRV] = useState(0);
+  const [currentMEV, setCurrentMEV] = useState(0);
   const [baseline, setBaseline] = useState([]);
 
   useEffect( () => {
@@ -43,7 +44,8 @@ function Mrv(){
       if(!doc.exists){
         console.log('Document does not exist, baseline MRV modifier set to 0.')
       } else {
-        setCurrentModifier(doc.data().baselineMRV)
+        setCurrentMRV(doc.data().baselineMRV);
+        setCurrentMEV(doc.data().baselineMEV);
       }
     })
     db.collection('volume').doc('baseline').get()
@@ -105,36 +107,107 @@ function Mrv(){
     [baseline]
   );
 
+  const mevColumns = React.useMemo(
+    () => [
+      {
+        Header: '',
+        accessor: 'blank',
+      },
+      {
+        Header: 'Hypertrophy',
+        accessor: 'hypertrophy',
+      },
+      {
+        Header: 'Strength',
+        accessor: 'strength',
+      },
+      {
+        Header: 'Peaking',
+        accessor: 'peaking',
+      },
+    ], []
+  );
+
+  const mevData = React.useMemo(
+    () => [
+      {
+        blank: 'Squat',
+        hypertrophy: `${Math.ceil(7.5 + currentMEV)} sets/week`,
+        strength: `${Math.ceil(5.5 + currentMEV)} sets/week`,
+        peaking: `${Math.ceil(4.5 + currentMEV)} sets/week`,
+      },
+      {
+        blank: 'Bench',
+        hypertrophy: `${Math.ceil(9 + currentMEV)} sets/week`,
+        strength: `${Math.ceil(8 + currentMEV)} sets/week`,
+        peaking: `${Math.ceil(6.5 + currentMEV)} sets/week`,
+      },
+      {
+        blank: 'Deadlift',
+        hypertrophy: `${Math.ceil(5.5 + currentMEV)} sets/week`,
+        strength: `${Math.ceil(4.5 + currentMEV)} sets/week`,
+        peaking: `${Math.ceil(2.5 + currentMEV)} sets/week`,
+      }
+    ], [currentMEV]
+  );
+
+  const mrvData = React.useMemo(
+    () => [
+      {
+        blank: 'Squat',
+        hypertrophy: `${Math.floor(14 + currentMRV)} sets/week`,
+        strength: `${Math.floor(9 + currentMRV)} sets/week`,
+        peaking: `${Math.floor(6 + currentMRV)} sets/week`,
+      },
+      {
+        blank: 'Bench',
+        hypertrophy: `${Math.floor(17 + currentMRV)} sets/week`,
+        strength: `${Math.floor(11 + currentMRV)} sets/week`,
+        peaking: `${Math.floor(8.5 + currentMRV)} sets/week`,
+      },
+      {
+        blank: 'Deadlift',
+        hypertrophy: `${(11 + currentMRV)} sets/week`,
+        strength: `${(7 + currentMRV)} sets/week`,
+        peaking: `${(4.5 + currentMRV)} sets/week`,
+      }
+    ], [currentMRV]
+  );
+  
+
   return (
     <div>
       <p>
-        Your baseline MRV modifier is {`${currentModifier > 0 ? '+' : '-'}${currentModifier}`} set per week.
+        Your baseline MEV modifier is {`${currentMEV > 0 ? '+' : '-'}${currentMEV}`} sets/week. 
+        Your baseline MRV modifier is {`${currentMRV > 0 ? '+' : '-'}${currentMRV}`} sets/week.
       </p>
       <p>
-        What this means is that based on your height, sex, training history, etc., that you can do roughly {`${currentModifier} ${currentModifier > 0 ? 'more' : 'less'}`} sets per week than the average MRV recommendations for each muscle group.
+        What this means is that based on your height, sex, training history, etc., that you need an estimated +1 sets/week to reach minimum effective volumes for hypertrophy/strength compared to median MEV values for the three main lifts. For MRV, you need an estimated {`${currentMRV} ${currentMRV > 0 ? 'more' : 'less'}`} sets per week than the median MRV recommendations for the three main lifts.
       </p>
       <p>
-        MRV recommendations can be made for muscle groups or for specific compounds (ex: glute MRV vs. squat MRV), but this tool will use muscle group MRV recommendations.
-        MRV can vary significantly based on training frequency as well-- higher training frequency generally means slightly higher MRVs (for example, if you train back 4 times a week, you might be able to get away with 4 more sets/week than if you only trained 2 times a week). 
-      </p>
-      <p>
-        Theoretically, if your focus is to grow a muscle group, your training for that muscle group throughout a mesocycle should move between your minimum adaptable volume at the beginning,
-        to your maximum adaptable volume towards the end of the mesocycle (if you are planning on accomplishing progressive overload by increasing volume, that is. You could also accomplish this by 
-        keeping volume consistent and increasing intensity). 
-      </p>
-      <p>
-        You could include a short period of functional overreaching at the end as well, meaning your volume would be 
-        above your maximum adaptable volume, but below your maximum recoverable volume (anything beyond your maximum recoverable volume will not be helpful). 
+        Progressive overload is a key factor in training if you want to grow bigger and stronger. Starting at our minimum effective volume, our training should increase in intensity and/or volume throughout our mesocycle. The final week of a mesocycle before your deload could hit your maximum recoverable volume, but it's not recommended to go above your MRV for more than a week, and you should deload right after.  
       </p>
       <p>
         By the end of your mesocycle, you should have accumulated enough fatigue that a deload or active recovery period is necessary.
       </p>
       <p>
-        See below for a baseline volume table for each muscle group.
+        See below for a table of your MEVs for each major compound lift:
       </p>
       <Styles>
-        <Table columns={columns} data={data} />
+        <Table columns={mevColumns} data={mevData} />
       </Styles>
+      <p>
+        And your MRVs for each major compound lift:
+      </p>
+      <Styles>
+        <Table columns={mevColumns} data={mrvData} />
+      </Styles>
+      <p>
+        Take the squat, for example: a reasonable structure to our programming could be to start somehwere near {Math.ceil(7.5 + currentMEV)} sets/week, and increase the amount of overloading squat sets we do per week, increase the amount of squat prime mover (quad, hamstring) accessories, increase intensities, or most likely, a combination of all three.
+      </p>  
+      <p>
+        Next, let's focus on our compound variation selection. 
+      </p>
     </div>
   );
 }

@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {auth, db} from '../services/firebase';
+import { Redirect } from 'react-router-dom';
 import {useSetInput} from '../helpers/setInput';
 import Question from '../components/question';
 
-function Test() {
+function Assessment() {
   const [readError, setReadError] = useState(null);
   const [writeError, setWriteError] = useState(null);
   const [questionArray, setQuestionArray] = useState(null);
   const [input, setInput] = useSetInput();
   const [currentUser, setCurrentUser] = useState(auth().currentUser);
+  const [toMRV, setToMRV] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,7 +32,8 @@ function Test() {
         answers: answerArray,
         baselineMRV: mrv,
         baselineMEV: mev
-      });
+      })
+      .then( () => setToMRV(true));
   }
 
   //retrieve question data
@@ -50,23 +53,26 @@ function Test() {
   }, []);
 
   return questionArray === null || questionArray.length !== 11 ? <p>Loading... </p> : (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
-        <legend>Determining your baseline Maximum Recoverable Volume (MRV)</legend>
-          {questionArray.map((question, questionIndex) => {
-            return (
-              <Question 
-                key={questionIndex}
-                question={question}
-                questionIndex={questionIndex}
-                setInput={setInput} 
-              />
-            );
-          })}
-      </fieldset>
-      <input type="submit" value="Submit" />
-    </form>
+    <>
+      {toMRV ? <Redirect to="/mrv" />: null}
+      <form onSubmit={handleSubmit}>
+        <fieldset>
+          <legend>Athlete Self-Assessment</legend>
+            {questionArray.map((question, questionIndex) => {
+              return (
+                <Question 
+                  key={questionIndex}
+                  question={question}
+                  questionIndex={questionIndex}
+                  setInput={setInput} 
+                />
+              );
+            })}
+        </fieldset>
+        <input type="submit" value="Submit" />
+      </form>
+    </>
   );
 }
 
-export default Test;
+export default Assessment;
