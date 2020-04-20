@@ -1,9 +1,41 @@
 import React, {useState, useEffect} from 'react';
 import {auth, db } from '../services/firebase';
+import Table from '../components/table';
+import styled from 'styled-components';
+
+const Styles = styled.div`
+  padding: 1rem;
+
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`
 
 function Mrv(){
   const [currentUser, setCurrentUser] = useState(auth().currentUser);
-  const [currentModifier, setCurrentModifier] = useState(0)
+  const [currentModifier, setCurrentModifier] = useState(0);
+  const [baseline, setBaseline] = useState([]);
 
   useEffect( () => {
     db.collection('users').doc(currentUser.uid).get()
@@ -14,7 +46,64 @@ function Mrv(){
         setCurrentModifier(doc.data().baselineMRV)
       }
     })
-  })
+    db.collection('volume').doc('baseline').get()
+    .then(doc => {
+      if(!doc.exists){
+        console.log('Document does not exist, baseline volumes not inputted.')
+      } else {
+        let data = [];
+        let keys = Object.keys(doc.data()).sort();
+        keys.map((k, index) => {
+          data[index] = doc.data()[k]
+          return data[index];
+        });
+        setBaseline(data);
+      }
+    })
+  }, [currentUser.uid])
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Muscle Group',
+        accessor: 'muscleGroup'
+      },
+      {
+        Header: 'MV',
+        accessor: 'maintenanceVolume'
+      },
+      {
+        Header: 'MEV',
+        accessor: 'minimumEffectiveVolume'
+      },
+      {
+        Header: 'MAV MIN',
+        accessor: 'maximumAdaptiveVolumeMin'
+      },
+      {
+        Header: 'MAV MAX',
+        accessor: 'maximumAdaptiveVolumeMax'
+      },
+      {
+        Header: 'MRV',
+        accessor: 'maximumRecoverableVolume'
+      },
+      {
+        Header: 'FRQ MIN',
+        accessor: 'frequencyMin'
+      },
+      {
+        Header: 'FRQ MAX',
+        accessor: 'frequencyMax'
+      },
+    ],
+    []
+  );
+
+  const data = React.useMemo(
+    () => baseline,
+    [baseline]
+  );
 
   return (
     <div>
@@ -43,6 +132,9 @@ function Mrv(){
       <p>
         See below for a baseline volume table for each muscle group.
       </p>
+      <Styles>
+        <Table columns={columns} data={data} />
+      </Styles>
     </div>
   );
 }
