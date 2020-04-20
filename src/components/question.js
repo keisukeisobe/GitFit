@@ -8,7 +8,7 @@ function Question(props) {
         return (
           <ul key={optionIndex}>
             <li>
-            <input type="radio" id={option.text} value={option.value} name={`question${props.questionIndex}`} onChange={props.setInput}></input>
+            <input type="radio" id={option.text} value={optionIndex} name={`question${props.questionIndex}`} onChange={props.setInput}></input>
             <label htmlFor={option.text}>
               {option.text}
             </label>

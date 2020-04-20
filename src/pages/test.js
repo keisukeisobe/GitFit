@@ -17,11 +17,19 @@ function Test() {
       input[k] = Number(input[k]);
     });
     const answerArray = Object.values(input);
-    const baselineMRV = answerArray.reduce( (accumulator, currentValue) => accumulator + currentValue);
+    let mrv = 0;
+    let mev = 0;
+    answerArray.forEach((k, index) => {
+      mrv+=questionArray[index].options[k].mrv;
+      mev+=questionArray[index].options[k].mev;
+      console.log(`MRV is now ${mrv}, MEV is now ${mev}`)
+    })
+    console.log(`MRV: ${mrv}, MEV: ${mev}`);
     db.collection('users').doc(currentUser.uid).set(
       {
         answers: answerArray,
-        baselineMRV: baselineMRV
+        baselineMRV: mrv,
+        baselineMEV: mev
       });
   }
 
