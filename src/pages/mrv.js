@@ -203,10 +203,10 @@ function Mrv(){
         <Table columns={mevColumns} data={mrvData} />
       </Styles>
       <p>
-        Take the squat, for example: a reasonable structure to our programming could be to start somehwere near {Math.ceil(7.5 + currentMEV)} sets/week, and increase the amount of overloading squat sets we do per week, increase the amount of squat prime mover (quad, hamstring) accessories, increase intensities, or most likely, a combination of all three.
+        Take the squat, for example: a reasonable structure to our programming would be to start near {Math.ceil(7.5 + currentMEV)} sets/week, and increase the amount of overloading squat sets we do per week, increase the amount of squat prime mover (quad, hamstring) accessories, increase intensities, or most likely, a combination of all three.
       </p>  
       <p>
-        Next, let's focus on our compound variation selection. 
+        Next, let's focus on our compound variation selection.
       </p>
     </div>
   );
