@@ -7,6 +7,7 @@ import About from './pages/about';
 import Assessment from './pages/assessment';
 import Mrv from './pages/mrv';
 import Postvolume from './pages/postvolume';
+import Postexercises from './pages/postexercises';
 import Compounds from './pages/compounds';
 import Accessories from './pages/accessories';
 
@@ -66,6 +67,7 @@ function App() {
           <PrivateRoute path="/workout" authenticated={authenticated} component={Workout} />
 
           <Route exact path="/postvolume" component={Postvolume}/>
+          <Route exact path="/postexercise" component={Postexercises}/>
           <PublicRoute path="/login" authenticated={authenticated} component={Login} />
         </Switch>
       </Router>
