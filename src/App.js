@@ -67,7 +67,6 @@ function App() {
           <PrivateRoute path="/compounds" authenticated={authenticated} component={Compounds}/>
           <PrivateRoute path="/accessories" authenticated={authenticated} component={Accessories} />
           <PrivateRoute path="/workout" authenticated={authenticated} component={Workout} />
-
           <Route exact path="/postvolume" component={Postvolume}/>
           <Route exact path="/postexercise" component={Postexercises}/>
           <PublicRoute path="/login" authenticated={authenticated} component={Login} />
