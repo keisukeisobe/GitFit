@@ -28,6 +28,22 @@ function MuscleGroups() {
       <p>
         The options for each muscle group are "Maintain, Grow (Low Volume), Grow (Medium Volume), Grow (High Volume), and Overreaching (Very High Volume)." 
       </p>
+      <p>
+        "Maintain" uses Renaissance Periodization's "Maintenance Volume" as a baseline for the number of sets/week. This volume will maintain muscle size, but likely will not grow muscle size.
+      </p>
+      <p>
+        Grow (Low Volume) uses RP's "Minimum Effective Volume" as a baseline for the number of sets/week.
+      </p>
+      <p>
+        Grow (Medium Volume) uses a value in between RP's "Minimum Effective Volume" and "Maximum Adaptive Volume" benchmarks as a baseline for the number of sets/week.
+      </p>
+      <p>
+        Grow (High Volume) uses the highest end of RP's "Maximum Adaptive Volume" as a baseline for the number of sets/week.
+      </p>
+      <p>
+        Overreaching (Very High Volume) uses RP's "Maximum Recoverable Volume" as a baseline for the number of sets/week. Using this much volume will likely put you in a state of "functional overreaching," which is likely not a sustainable amount of volume. 
+      </p>
+
       <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Muscle Group Goals</legend>

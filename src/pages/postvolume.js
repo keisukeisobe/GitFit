@@ -128,6 +128,13 @@ function Postvolume(){
             </label>
           </li>
           <li>
+            <label htmlFor="maximumAdaptiveVolumeMed">
+              Maximum Adaptive Volume Median:
+              <input type="number" name="maximumAdaptiveVolumeMed" id="maximumAdaptiveVolumeMed" value={volumeObject.maximumAdaptiveVolumeMed} onChange={handleVolumeChange}></input>
+              (sets/wk)
+            </label>
+          </li>          
+          <li>
             <label htmlFor="maximumRecoverableVolume">
             Maximum Recoverable Volume:
             <input type="number" name="maximumRecoverableVolume" id="maximumRecoverableVolume" value={volumeObject.maximumRecoverableVolume} onChange={handleVolumeChange}></input>
