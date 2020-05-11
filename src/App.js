@@ -9,6 +9,7 @@ import Mrv from './pages/mrv';
 import Postvolume from './pages/postvolume';
 import Postexercises from './pages/postexercises';
 import Compounds from './pages/compounds';
+import MuscleGroups from './pages/musclegroups';
 import Accessories from './pages/accessories';
 
 //if user is NOT authenticated, take them to /login
@@ -62,6 +63,7 @@ function App() {
           <Route exact path="/" component={About} />
           <PrivateRoute path="/assessment" authenticated={authenticated} component={Assessment}/>
           <PrivateRoute path="/mrv" authenticated={authenticated} component={Mrv}/>
+          <PrivateRoute path="/musclegroups" authenticated={authenticated} component={MuscleGroups}/>
           <PrivateRoute path="/compounds" authenticated={authenticated} component={Compounds}/>
           <PrivateRoute path="/accessories" authenticated={authenticated} component={Accessories} />
           <PrivateRoute path="/workout" authenticated={authenticated} component={Workout} />

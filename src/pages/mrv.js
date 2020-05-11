@@ -208,6 +208,9 @@ function Mrv(){
       <p>
         Next, let's focus on our compound variation selection.
       </p>
+      <Styles>
+        <Table columns={columns} data={data} />
+      </Styles>
     </div>
   );
 }
